@@ -317,8 +317,8 @@ button:hover {
 }
 
 .triangle-svg {
-    width: 200px;
-    height: 200px;
+    width: 220px;
+    height: 220px;
 }
 
 .triangle-path {
@@ -332,6 +332,7 @@ button:hover {
     font-weight: bold;
     fill: var(--primary);
     font-size: 14px;
+    text-anchor: middle;
 }
 
 .probability-game {
@@ -401,6 +402,12 @@ button:hover {
     text-align: center;
     margin: 1rem 0;
     color: var(--primary);
+}
+
+.ltr-number {
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: embed;
 }
 
 .feedback {
