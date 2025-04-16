@@ -102,19 +102,22 @@
             <h2><i class="fas fa-chart-bar"></i> آمار و احتمال</h2>
             
             <div class="probability-game">
-                <div class="problem-box">
-                    <h3><i class="fas fa-question-circle"></i> مسئله احتمال</h3>
-                    <div class="problem-text" id="probability-problem"></div>
-                    <div class="options" id="probability-options"></div>
-                    <button onclick="checkProbabilityAnswer()">بررسی پاسخ</button>
-                    <div class="result" id="probability-result"></div>
+                <div class="game-header">
+                    <div class="score-box">
+                        امتیاز: <span id="probability-score">0</span>
+                    </div>
+                    <div class="question-counter">
+                        سوال <span id="current-q">1</span> از <span id="total-qs">10</span>
+                    </div>
                 </div>
                 
-                <div class="explanation-box">
-                    <h3><i class="fas fa-lightbulb"></i> راه حل</h3>
-                    <div class="explanation-text" id="probability-explanation"></div>
-                    <button onclick="nextProbabilityProblem()">مسئله بعدی</button>
+                <div class="problem-box">
+                    <div class="problem-text" id="probability-problem"></div>
+                    <div class="options" id="probability-options"></div>
                 </div>
+                
+                <div class="result" id="probability-result"></div>
+                <button class="next-btn" onclick="nextProbabilityProblem()">سوال بعدی</button>
             </div>
         </section>
         
@@ -132,7 +135,7 @@
                 
                 <div class="game-area">
                     <div class="question" id="question"></div>
-                    <input type="number" id="answer" placeholder="پاسخ شما..." dir="ltr">
+                    <input type="number" id="answer" placeholder="پاسخ شما...">
                     <button onclick="checkAnswer()">بررسی پاسخ</button>
                     <div class="feedback" id="feedback"></div>
                 </div>
