@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزشگاه مجازی ریاضی | مهند مولوی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                آموزشگاه مجازی ریاضی <i class="fas fa-square-root-alt"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#pythagoras">فیثاغورس</a></li>
+                <li><a href="#probability">آمار و احتمال</a></li>
+                <li><a href="#math-game">بازی ریاضی</a></li>
+                <li><a href="#about">درباره ما</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <section class="hero">
+            <h1>ریاضیات هشتم مدرسه حاج محمد رفیع بهروزیان</h1>
+            <p>طراحی و توسعه: مهند مولوی - پایه هشتم</p>
+        </section>
+        
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-calculator"></i>
+                <h3>ماشین حساب فیثاغورس</h3>
+                <p>محاسبه سریع و دقیق اضلاع مثلث قائم الزاویه</p>
+                <a href="#pythagoras" class="btn">شروع کنید</a>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-chart-pie"></i>
+                <h3>آمار و احتمال</h3>
+                <p>یادگیری مفاهیم احتمال با بازی تاس</p>
+                <a href="#probability" class="btn">شروع کنید</a>
+            </div>
+            
+            <div class="feature-card">
+                <i class="fas fa-gamepad"></i>
+                <h3>بازی محاسبات</h3>
+                <p>تمرین محاسبات سریع ریاضی با زمان</p>
+                <a href="#math-game" class="btn">شروع کنید</a>
+            </div>
+        </section>
+        
+        <section id="pythagoras" class="pythagoras-section">
+            <h2><i class="fas fa-triangle"></i> قضیه فیثاغورس</h2>
+            
+            <div class="calculator">
+                <div class="calculator-box">
+                    <h3><i class="fas fa-calculator"></i> محاسبه وتر (c)</h3>
+                    <div class="input-group">
+                        <label for="side-a">ضلع a</label>
+                        <input type="number" id="side-a" placeholder="طول ضلع اول را وارد کنید" class="clearable-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="side-b">ضلع b</label>
+                        <input type="number" id="side-b" placeholder="طول ضلع دوم را وارد کنید" class="clearable-input">
+                    </div>
+                    <button onclick="calculateHypotenuse()">محاسبه کن</button>
+                    <div class="result" id="hypotenuse-result"></div>
+                </div>
+                
+                <div class="calculator-box">
+                    <h3><i class="fas fa-ruler-combined"></i> محاسبه ضلع مجاور</h3>
+                    <div class="input-group">
+                        <label for="side-c">وتر (c)</label>
+                        <input type="number" id="side-c" placeholder="طول وتر را وارد کنید" class="clearable-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="side-known">ضلع شناخته شده</label>
+                        <input type="number" id="side-known" placeholder="طول ضلع شناخته شده را وارد کنید" class="clearable-input">
+                    </div>
+                    <button onclick="calculateSide()">محاسبه کن</button>
+                    <div class="result" id="side-result"></div>
+                </div>
+                
+                <div class="visualization">
+                    <h3><i class="fas fa-eye"></i> نمایش گرافیکی</h3>
+                    <div class="triangle">
+                        <div class="triangle-side side-a"></div>
+                        <div class="triangle-side side-b"></div>
+                        <div class="triangle-side side-c"></div>
+                        <div class="side-label label-a">a</div>
+                        <div class="side-label label-b">b</div>
+                        <div class="side-label label-c">c</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="probability" class="probability-section">
+            <h2><i class="fas fa-dice"></i> آمار و احتمال</h2>
+            
+            <div class="game-container">
+                <div class="dice-game">
+                    <h3><i class="fas fa-dice-five"></i> بازی تاس</h3>
+                    
+                    <div class="dice-container">
+                        <div class="dice" id="dice1" onclick="rollDice()">?</div>
+                        <div class="dice" id="dice2" onclick="rollDice()">?</div>
+                    </div>
+                    
+                    <div class="result">
+                        <p>مجموع: <span id="dice-sum">-</span></p>
+                        <p>تعداد دفعات پرتاب: <span id="roll-count">0</span></p>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <h3><i class="fas fa-chart-bar"></i> آمار نتایج</h3>
+                    
+                    <div class="chart-container" id="chart"></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="math-game" class="math-game-section">
+            <h2><i class="fas fa-stopwatch"></i> بازی محاسبات سریع</h2>
+            
+            <div class="math-game-container">
+                <div class="game-info">
+                    <p>در این بازی شما باید در کمترین زمان ممکن به سوالات ریاضی پاسخ دهید!</p>
+                    <div class="game-stats">
+                        <div>امتیاز: <span id="score">0</span></div>
+                        <div>زمان: <span id="time">30</span> ثانیه</div>
+                    </div>
+                </div>
+                
+                <div class="game-area">
+                    <div class="question" id="question"></div>
+                    <input type="number" id="answer" placeholder="پاسخ شما..." class="clearable-input">
+                    <button onclick="checkAnswer()">بررسی پاسخ</button>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+                
+                <button class="start-btn" onclick="startGame()">شروع بازی</button>
+            </div>
+        </section>
+    </div>
+    
+    <footer id="about">
+        <div class="footer-content">
+            <h3>آموزشگاه مجازی ریاضی</h3>
+            <p>مدرسه حاج محمد رفیع بهروزیان - پایه هشتم</p>
+            <p>طراحی شده توسط مهند مولوی</p>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
