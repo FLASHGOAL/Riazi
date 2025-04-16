@@ -75,96 +75,259 @@ function updateTriangleVisualization(a, b, c) {
 }
 
 // بخش احتمال - متغیرهای جهانی
+// بخش احتمال - متغیرهای جهانی
+let probabilityScore = 0;
 let currentProbabilityProblem = {};
 let userProbabilityAnswer = null;
+let currentQuestionIndex = 0;
+let totalQuestions = 10;
+let probabilityProblems = [];
+let usedQuestionIndices = [];
 
-// تولید مسئله احتمال
-function generateProbabilityProblem() {
-    const problemTypes = [
-        {
-            question: "در یک کیسه 3 توپ قرمز و 2 توپ آبی وجود دارد. اگر یک توپ به تصادف از کیسه خارج کنیم، احتمال اینکه توپ آبی باشد چقدر است؟",
-            options: [
-                { text: "1/5", value: "1/5", correct: false },
-                { text: "2/5", value: "2/5", correct: true },
-                { text: "3/5", value: "3/5", correct: false },
-                { text: "2/3", value: "2/3", correct: false }
-            ],
-            explanation: "تعداد کل توپ‌ها: 5 (3 قرمز + 2 آبی)<br>تعداد توپ‌های آبی: 2<br>احتمال = تعداد حالت‌های مطلوب / تعداد کل حالت‌ها = 2/5"
-        },
-        {
-            question: "اگر یک سکه سالم را دو بار پرتاب کنیم، احتمال اینکه حداقل یک بار شیر بیاید چقدر است؟",
-            options: [
-                { text: "1/4", value: "1/4", correct: false },
-                { text: "1/2", value: "1/2", correct: false },
-                { text: "3/4", value: "3/4", correct: true },
-                { text: "1", value: "1", correct: false }
-            ],
-            explanation: "حالت‌های ممکن: شیر-شیر، شیر-خط، خط-شیر، خط-خط<br>حالت‌های مطلوب: 3 حالت اول<br>احتمال = 3/4"
-        },
-        {
-            question: "اگر یک تاس سالم را پرتاب کنیم، احتمال اینکه عددی زوج یا بزرگتر از 4 بیاید چقدر است؟",
-            options: [
-                { text: "1/6", value: "1/6", correct: false },
-                { text: "1/2", value: "1/2", correct: false },
-                { text: "2/3", value: "2/3", correct: true },
-                { text: "5/6", value: "5/6", correct: false }
-            ],
-            explanation: "اعداد زوج: 2, 4, 6<br>اعداد بزرگتر از 4: 5, 6<br>اعداد مطلوب: 2, 4, 5, 6 (4 عدد)<br>احتمال = 4/6 = 2/3"
+// بانک سوالات احتمال
+const probabilityQuestionBank = [
+    {
+        question: "در یک کیسه 3 توپ قرمز و 2 توپ آبی وجود دارد. احتمال کشیدن یک توپ آبی چقدر است؟",
+        options: [
+            { text: "1/5", value: "1/5", correct: false },
+            { text: "2/5", value: "2/5", correct: true },
+            { text: "3/5", value: "3/5", correct: false },
+            { text: "2/3", value: "2/3", correct: false }
+        ],
+        explanation: "تعداد کل توپ‌ها: 5 (3 قرمز + 2 آبی)<br>تعداد توپ‌های آبی: 2<br>احتمال = تعداد حالت‌های مطلوب / تعداد کل حالت‌ها = 2/5"
+    },
+    {
+        question: "احتمال اینکه در پرتاب دو سکه حداقل یک شیر بیاید چقدر است؟",
+        options: [
+            { text: "1/4", value: "1/4", correct: false },
+            { text: "1/2", value: "1/2", correct: false },
+            { text: "3/4", value: "3/4", correct: true },
+            { text: "1", value: "1", correct: false }
+        ],
+        explanation: "حالت‌های ممکن: شیر-شیر، شیر-خط، خط-شیر، خط-خط<br>حالت‌های مطلوب: 3 حالت اول<br>احتمال = 3/4"
+    },
+    {
+        question: "احتمال آمدن عددی زوج یا بزرگتر از 4 در پرتاب تاس چقدر است؟",
+        options: [
+            { text: "1/6", value: "1/6", correct: false },
+            { text: "1/2", value: "1/2", correct: false },
+            { text: "2/3", value: "2/3", correct: true },
+            { text: "5/6", value: "5/6", correct: false }
+        ],
+        explanation: "اعداد زوج: 2, 4, 6<br>اعداد بزرگتر از 4: 5, 6<br>اعداد مطلوب: 2, 4, 5, 6 (4 عدد)<br>احتمال = 4/6 = 2/3"
+    },
+    {
+        question: "اگر احتمال بارانی بودن فردا 30% باشد، احتمال نبارانی بودن چقدر است؟",
+        options: [
+            { text: "30%", value: "30", correct: false },
+            { text: "50%", value: "50", correct: false },
+            { text: "70%", value: "70", correct: true },
+            { text: "100%", value: "100", correct: false }
+        ],
+        explanation: "احتمال نبارانی بودن = 100% - احتمال بارانی بودن = 100% - 30% = 70%"
+    },
+    {
+        question: "احتمال اینکه عددی اول بین 1 تا 10 در پرتاب تاس بیاید چقدر است؟",
+        options: [
+            { text: "1/6", value: "1/6", correct: false },
+            { text: "1/3", value: "1/3", correct: false },
+            { text: "1/2", value: "1/2", correct: true },
+            { text: "2/3", value: "2/3", correct: false }
+        ],
+        explanation: "اعداد اول بین 1 تا 10: 2, 3, 5, 7 (4 عدد)<br>احتمال = 4/6 = 2/3 ≈ 1/2"
+    },
+    {
+        question: "در یک کلاس 12 نفره، 5 دختر و 7 پسر هستند. احتمال انتخاب تصادفی یک دختر چقدر است؟",
+        options: [
+            { text: "5/7", value: "5/7", correct: false },
+            { text: "7/12", value: "7/12", correct: false },
+            { text: "5/12", value: "5/12", correct: true },
+            { text: "12/5", value: "12/5", correct: false }
+        ],
+        explanation: "تعداد کل دانش‌آموزان: 12<br>تعداد دختران: 5<br>احتمال = 5/12"
+    },
+    {
+        question: "احتمال اینکه در پرتاب سه سکه حداقل دو شیر بیاید چقدر است؟",
+        options: [
+            { text: "1/8", value: "1/8", correct: false },
+            { text: "1/2", value: "1/2", correct: true },
+            { text: "3/8", value: "3/8", correct: false },
+            { text: "5/8", value: "5/8", correct: false }
+        ],
+        explanation: "حالت‌های ممکن: 8 حالت<br>حالت‌های مطلوب (2 شیر یا 3 شیر): 4 حالت<br>احتمال = 4/8 = 1/2"
+    },
+    {
+        question: "اگر احتمال برنده شدن در یک بازی 0.2 باشد، احتمال باخت چقدر است؟",
+        options: [
+            { text: "0.2", value: "0.2", correct: false },
+            { text: "0.5", value: "0.5", correct: false },
+            { text: "0.8", value: "0.8", correct: true },
+            { text: "1", value: "1", correct: false }
+        ],
+        explanation: "احتمال باخت = 1 - احتمال برنده شدن = 1 - 0.2 = 0.8"
+    },
+    {
+        question: "احتمال آمدن عددی فرد در پرتاب تاس چقدر است؟",
+        options: [
+            { text: "1/6", value: "1/6", correct: false },
+            { text: "1/3", value: "1/3", correct: false },
+            { text: "1/2", value: "1/2", correct: true },
+            { text: "2/3", value: "2/3", correct: false }
+        ],
+        explanation: "اعداد فرد: 1, 3, 5 (3 عدد)<br>احتمال = 3/6 = 1/2"
+    },
+    {
+        question: "در یک کیسه 4 مهره سبز و 6 مهره زرد وجود دارد. احتمال کشیدن یک مهره سبز چقدر است؟",
+        options: [
+            { text: "4/6", value: "4/6", correct: false },
+            { text: "6/10", value: "6/10", correct: false },
+            { text: "4/10", value: "4/10", correct: true },
+            { text: "10/4", value: "10/4", correct: false }
+        ],
+        explanation: "تعداد کل مهره‌ها: 10<br>تعداد مهره‌های سبز: 4<br>احتمال = 4/10"
+    },
+    {
+        question: "احتمال اینکه عددی بین 2 تا 5 در پرتاب تاس بیاید چقدر است؟",
+        options: [
+            { text: "1/6", value: "1/6", correct: false },
+            { text: "1/3", value: "1/3", correct: false },
+            { text: "2/3", value: "2/3", correct: true },
+            { text: "5/6", value: "5/6", correct: false }
+        ],
+        explanation: "اعداد بین 2 تا 5: 2, 3, 4, 5 (4 عدد)<br>احتمال = 4/6 = 2/3"
+    },
+    {
+        question: "اگر احتمال موفقیت در آزمون 0.75 باشد، احتمال عدم موفقیت چقدر است؟",
+        options: [
+            { text: "0.25", value: "0.25", correct: true },
+            { text: "0.5", value: "0.5", correct: false },
+            { text: "0.75", value: "0.75", correct: false },
+            { text: "1", value: "1", correct: false }
+        ],
+        explanation: "احتمال عدم موفقیت = 1 - احتمال موفقیت = 1 - 0.75 = 0.25"
+    }
+];
+
+// شروع بازی احتمال
+function startProbabilityGame() {
+    probabilityScore = 0;
+    currentQuestionIndex = 0;
+    usedQuestionIndices = [];
+    document.getElementById('probability-score').textContent = probabilityScore;
+    document.getElementById('question-count').textContent = currentQuestionIndex + 1;
+    document.getElementById('total-questions').textContent = totalQuestions;
+    document.querySelector('.start-btn').style.display = 'none';
+    
+    // انتخاب سوالات تصادفی غیرتکراری
+    probabilityProblems = [];
+    while (probabilityProblems.length < totalQuestions) {
+        const randomIndex = Math.floor(Math.random() * probabilityQuestionBank.length);
+        if (!usedQuestionIndices.includes(randomIndex)) {
+            probabilityProblems.push(probabilityQuestionBank[randomIndex]);
+            usedQuestionIndices.push(randomIndex);
         }
-    ];
+    }
     
-    // انتخاب تصادفی یک مسئله
-    currentProbabilityProblem = problemTypes[Math.floor(Math.random() * problemTypes.length)];
+    showProbabilityQuestion();
+}
+
+// نمایش سوال احتمال
+function showProbabilityQuestion() {
+    if (currentQuestionIndex >= totalQuestions) {
+        endProbabilityGame();
+        return;
+    }
     
-    // نمایش مسئله
+    currentProbabilityProblem = probabilityProblems[currentQuestionIndex];
     document.getElementById('probability-problem').innerHTML = currentProbabilityProblem.question;
+    document.getElementById('question-count').textContent = currentQuestionIndex + 1;
     
-    // نمایش گزینه‌ها
     const optionsContainer = document.getElementById('probability-options');
     optionsContainer.innerHTML = '';
     
     currentProbabilityProblem.options.forEach((option, index) => {
         const optionElement = document.createElement('div');
         optionElement.className = 'option';
-        optionElement.innerHTML = `
-            <input type="radio" name="probability" id="option-${index}" value="${option.value}">
-            <label for="option-${index}">${option.text}</label>
-        `;
-        optionElement.querySelector('input').addEventListener('change', function() {
-            userProbabilityAnswer = this.value;
-        });
+        optionElement.innerHTML = option.text;
+        optionElement.dataset.value = option.value;
+        optionElement.dataset.correct = option.correct;
+        optionElement.addEventListener('click', selectProbabilityAnswer);
         optionsContainer.appendChild(optionElement);
     });
     
-    // پاک کردن نتیجه و راه حل قبلی
     document.getElementById('probability-result').textContent = '';
     document.getElementById('probability-explanation').textContent = '';
 }
 
-// بررسی پاسخ احتمال
-function checkProbabilityAnswer() {
-    if (!userProbabilityAnswer) {
-        alert('لطفاً یک گزینه را انتخاب کنید');
-        return;
-    }
+// انتخاب پاسخ احتمال
+function selectProbabilityAnswer(e) {
+    if (document.getElementById('probability-result').textContent !== '') return;
     
-    const resultElement = document.getElementById('probability-result');
-    const correctAnswer = currentProbabilityProblem.options.find(opt => opt.correct).value;
+    const selectedOption = e.target;
+    const options = document.querySelectorAll('.option');
     
-    if (userProbabilityAnswer === correctAnswer) {
-        resultElement.innerHTML = '<span style="color: var(--success)">پاسخ شما صحیح است! ✓</span>';
+    // نشان دادن انتخاب کاربر
+    options.forEach(opt => opt.classList.remove('selected'));
+    selectedOption.classList.add('selected');
+    
+    // بررسی پاسخ
+    const isCorrect = selectedOption.dataset.correct === 'true';
+    const feedback = document.getElementById('probability-result');
+    const explanation = document.getElementById('probability-explanation');
+    
+    if (isCorrect) {
+        probabilityScore += 10;
+        feedback.innerHTML = '<span style="color: var(--success)">پاسخ شما صحیح است! +10 امتیاز</span>';
+        feedback.className = 'probability-feedback correct';
     } else {
-        resultElement.innerHTML = '<span style="color: var(--danger)">پاسخ شما نادرست است!</span>';
+        feedback.innerHTML = '<span style="color: var(--danger)">پاسخ شما نادرست است!</span>';
+        feedback.className = 'probability-feedback incorrect';
+        
+        // نشان دادن پاسخ صحیح
+        options.forEach(opt => {
+            if (opt.dataset.correct === 'true') {
+                opt.classList.add('correct');
+            } else {
+                opt.classList.add('incorrect');
+            }
+        });
     }
     
     // نمایش راه حل
-    document.getElementById('probability-explanation').innerHTML = currentProbabilityProblem.explanation;
+    explanation.innerHTML = currentProbabilityProblem.explanation;
+    
+    // به روز رسانی امتیاز
+    document.getElementById('probability-score').textContent = probabilityScore;
+    
+    // نمایش دکمه ادامه
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'next-btn';
+    nextBtn.textContent = 'سوال بعدی';
+    nextBtn.onclick = nextProbabilityQuestion;
+    
+    const resultDiv = document.getElementById('probability-result');
+    resultDiv.appendChild(nextBtn);
 }
 
-// مسئله بعدی احتمال
-function nextProbabilityProblem() {
-    userProbabilityAnswer = null;
-    generateProbabilityProblem();
+// رفتن به سوال بعدی
+function nextProbabilityQuestion() {
+    currentQuestionIndex++;
+    showProbabilityQuestion();
+}
+
+// پایان بازی احتمال
+function endProbabilityGame() {
+    const feedback = document.getElementById('probability-result');
+    feedback.innerHTML = `
+        <h3>پایان بازی!</h3>
+        <p>امتیاز نهایی شما: ${probabilityScore} از ${totalQuestions * 10}</p>
+        <button class="start-btn" onclick="startProbabilityGame()">شروع مجدد</button>
+    `;
+    feedback.className = 'probability-feedback';
+    
+    document.getElementById('probability-problem').textContent = '';
+    document.getElementById('probability-options').innerHTML = '';
+    document.getElementById('probability-explanation').textContent = '';
 }
 
 // بازی محاسبات سریع
