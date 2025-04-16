@@ -40,7 +40,7 @@
             <div class="feature-card">
                 <i class="fas fa-chart-pie"></i>
                 <h3>آمار و احتمال</h3>
-                <p>یادگیری مفاهیم احتمال با بازی تاس</p>
+                <p>حل مسائل احتمال با مثال‌های تعاملی</p>
                 <a href="#probability" class="btn">شروع کنید</a>
             </div>
             
@@ -60,11 +60,11 @@
                     <h3><i class="fas fa-calculator"></i> محاسبه وتر (c)</h3>
                     <div class="input-group">
                         <label for="side-a">ضلع a</label>
-                        <input type="number" id="side-a" placeholder="طول ضلع اول را وارد کنید" class="clearable-input">
+                        <input type="number" id="side-a" placeholder="طول ضلع اول را وارد کنید">
                     </div>
                     <div class="input-group">
                         <label for="side-b">ضلع b</label>
-                        <input type="number" id="side-b" placeholder="طول ضلع دوم را وارد کنید" class="clearable-input">
+                        <input type="number" id="side-b" placeholder="طول ضلع دوم را وارد کنید">
                     </div>
                     <button onclick="calculateHypotenuse()">محاسبه کن</button>
                     <div class="result" id="hypotenuse-result"></div>
@@ -74,11 +74,11 @@
                     <h3><i class="fas fa-ruler-combined"></i> محاسبه ضلع مجاور</h3>
                     <div class="input-group">
                         <label for="side-c">وتر (c)</label>
-                        <input type="number" id="side-c" placeholder="طول وتر را وارد کنید" class="clearable-input">
+                        <input type="number" id="side-c" placeholder="طول وتر را وارد کنید">
                     </div>
                     <div class="input-group">
                         <label for="side-known">ضلع شناخته شده</label>
-                        <input type="number" id="side-known" placeholder="طول ضلع شناخته شده را وارد کنید" class="clearable-input">
+                        <input type="number" id="side-known" placeholder="طول ضلع شناخته شده را وارد کنید">
                     </div>
                     <button onclick="calculateSide()">محاسبه کن</button>
                     <div class="result" id="side-result"></div>
@@ -86,40 +86,34 @@
                 
                 <div class="visualization">
                     <h3><i class="fas fa-eye"></i> نمایش گرافیکی</h3>
-                    <div class="triangle">
-                        <div class="triangle-side side-a"></div>
-                        <div class="triangle-side side-b"></div>
-                        <div class="triangle-side side-c"></div>
-                        <div class="side-label label-a">a</div>
-                        <div class="side-label label-b">b</div>
-                        <div class="side-label label-c">c</div>
+                    <div class="triangle-container">
+                        <svg class="triangle-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <path class="triangle-path" d="M20,180 L20,20 L180,180 Z" />
+                            <text x="10" y="190" class="side-label">a</text>
+                            <text x="10" y="100" class="side-label">b</text>
+                            <text x="100" y="100" class="side-label">c</text>
+                        </svg>
                     </div>
                 </div>
             </div>
         </section>
         
         <section id="probability" class="probability-section">
-            <h2><i class="fas fa-dice"></i> آمار و احتمال</h2>
+            <h2><i class="fas fa-chart-bar"></i> آمار و احتمال</h2>
             
-            <div class="game-container">
-                <div class="dice-game">
-                    <h3><i class="fas fa-dice-five"></i> بازی تاس</h3>
-                    
-                    <div class="dice-container">
-                        <div class="dice" id="dice1" onclick="rollDice()">?</div>
-                        <div class="dice" id="dice2" onclick="rollDice()">?</div>
-                    </div>
-                    
-                    <div class="result">
-                        <p>مجموع: <span id="dice-sum">-</span></p>
-                        <p>تعداد دفعات پرتاب: <span id="roll-count">0</span></p>
-                    </div>
+            <div class="probability-game">
+                <div class="problem-box">
+                    <h3><i class="fas fa-question-circle"></i> مسئله احتمال</h3>
+                    <div class="problem-text" id="probability-problem"></div>
+                    <div class="options" id="probability-options"></div>
+                    <button onclick="checkProbabilityAnswer()">بررسی پاسخ</button>
+                    <div class="result" id="probability-result"></div>
                 </div>
                 
-                <div class="stats">
-                    <h3><i class="fas fa-chart-bar"></i> آمار نتایج</h3>
-                    
-                    <div class="chart-container" id="chart"></div>
+                <div class="explanation-box">
+                    <h3><i class="fas fa-lightbulb"></i> راه حل</h3>
+                    <div class="explanation-text" id="probability-explanation"></div>
+                    <button onclick="nextProbabilityProblem()">مسئله بعدی</button>
                 </div>
             </div>
         </section>
@@ -138,7 +132,7 @@
                 
                 <div class="game-area">
                     <div class="question" id="question"></div>
-                    <input type="number" id="answer" placeholder="پاسخ شما..." class="clearable-input">
+                    <input type="number" id="answer" placeholder="پاسخ شما...">
                     <button onclick="checkAnswer()">بررسی پاسخ</button>
                     <div class="feedback" id="feedback"></div>
                 </div>
