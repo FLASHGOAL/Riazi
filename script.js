@@ -1,15 +1,10 @@
 // تنظیمات اولیه
 document.addEventListener('DOMContentLoaded', function() {
-    // پاک کردن خودکار فیلدهای ورودی هنگام فوکوس
-    const clearableInputs = document.querySelectorAll('.clearable-input');
-    clearableInputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.value = '';
-        });
-    });
-    
     // مقداردهی اولیه مثلث
     updateTriangleVisualization(3, 4, 5);
+    
+    // شروع اولین مسئله احتمال
+    generateProbabilityProblem();
 });
 
 // محاسبه وتر فیثاغورس
@@ -46,75 +41,125 @@ function calculateSide() {
 
 // به روز رسانی نمایش گرافیکی مثلث
 function updateTriangleVisualization(a, b, c) {
-    const scale = 200 / Math.max(a, b, c);
+    const svg = document.querySelector('.triangle-svg');
+    const path = document.querySelector('.triangle-path');
+    
+    // محاسبه مختصات بر اساس نسبت اضلاع
+    const maxSide = Math.max(a, b, c);
+    const scale = 160 / maxSide;
     const scaledA = a * scale;
     const scaledB = b * scale;
-    const scaledC = c * scale;
-    const angle = Math.atan2(b, a) * (180 / Math.PI);
     
-    document.querySelector('.side-a').style.width = `${scaledA}px`;
-    document.querySelector('.side-b').style.height = `${scaledB}px`;
-    document.querySelector('.side-c').style.width = `${scaledC}px`;
-    document.querySelector('.side-c').style.transform = `rotate(${-angle}deg)`;
-    document.querySelector('.side-c').style.bottom = `${scaledB}px`;
+    // ایجاد مسیر مثلث
+    const pathData = `M20,180 L20,${180 - scaledB} L${20 + scaledA},180 Z`;
+    path.setAttribute('d', pathData);
     
-    document.querySelector('.label-a').textContent = `a = ${a}`;
-    document.querySelector('.label-b').textContent = `b = ${b}`;
-    document.querySelector('.label-c').textContent = `c = ${c.toFixed(2)}`;
+    // به روز رسانی برچسب‌ها
+    const labels = document.querySelectorAll('.side-label');
+    labels[0].textContent = `a = ${a}`;
+    labels[0].setAttribute('x', 10);
+    labels[0].setAttribute('y', 190);
+    
+    labels[1].textContent = `b = ${b}`;
+    labels[1].setAttribute('x', 10);
+    labels[1].setAttribute('y', 180 - (scaledB / 2));
+    
+    labels[2].textContent = `c = ${c.toFixed(2)}`;
+    labels[2].setAttribute('x', 20 + (scaledA / 2) - 20);
+    labels[2].setAttribute('y', 180 - (scaledB / 2) - 10);
 }
 
-// بازی تاس
-let rollCount = 0;
-let results = Array(11).fill(0);
+// بخش احتمال - متغیرهای جهانی
+let currentProbabilityProblem = {};
+let userProbabilityAnswer = null;
 
-function rollDice() {
-    const dice1 = Math.floor(Math.random() * 6) + 1;
-    const dice2 = Math.floor(Math.random() * 6) + 1;
-    const sum = dice1 + dice2;
+// تولید مسئله احتمال
+function generateProbabilityProblem() {
+    const problemTypes = [
+        {
+            question: "در یک کیسه 3 توپ قرمز و 2 توپ آبی وجود دارد. اگر یک توپ به تصادف از کیسه خارج کنیم، احتمال اینکه توپ آبی باشد چقدر است؟",
+            options: [
+                { text: "1/5", value: "1/5", correct: false },
+                { text: "2/5", value: "2/5", correct: true },
+                { text: "3/5", value: "3/5", correct: false },
+                { text: "2/3", value: "2/3", correct: false }
+            ],
+            explanation: "تعداد کل توپ‌ها: 5 (3 قرمز + 2 آبی)<br>تعداد توپ‌های آبی: 2<br>احتمال = تعداد حالت‌های مطلوب / تعداد کل حالت‌ها = 2/5"
+        },
+        {
+            question: "اگر یک سکه سالم را دو بار پرتاب کنیم، احتمال اینکه حداقل یک بار شیر بیاید چقدر است؟",
+            options: [
+                { text: "1/4", value: "1/4", correct: false },
+                { text: "1/2", value: "1/2", correct: false },
+                { text: "3/4", value: "3/4", correct: true },
+                { text: "1", value: "1", correct: false }
+            ],
+            explanation: "حالت‌های ممکن: شیر-شیر، شیر-خط، خط-شیر، خط-خط<br>حالت‌های مطلوب: 3 حالت اول<br>احتمال = 3/4"
+        },
+        {
+            question: "اگر یک تاس سالم را پرتاب کنیم، احتمال اینکه عددی زوج یا بزرگتر از 4 بیاید چقدر است؟",
+            options: [
+                { text: "1/6", value: "1/6", correct: false },
+                { text: "1/2", value: "1/2", correct: false },
+                { text: "2/3", value: "2/3", correct: true },
+                { text: "5/6", value: "5/6", correct: false }
+            ],
+            explanation: "اعداد زوج: 2, 4, 6<br>اعداد بزرگتر از 4: 5, 6<br>اعداد مطلوب: 2, 4, 5, 6 (4 عدد)<br>احتمال = 4/6 = 2/3"
+        }
+    ];
     
-    document.getElementById('dice1').textContent = dice1;
-    document.getElementById('dice2').textContent = dice2;
-    document.getElementById('dice-sum').textContent = sum;
+    // انتخاب تصادفی یک مسئله
+    currentProbabilityProblem = problemTypes[Math.floor(Math.random() * problemTypes.length)];
     
-    rollCount++;
-    document.getElementById('roll-count').textContent = rollCount;
+    // نمایش مسئله
+    document.getElementById('probability-problem').innerHTML = currentProbabilityProblem.question;
     
-    results[sum-2]++;
-    updateChart();
+    // نمایش گزینه‌ها
+    const optionsContainer = document.getElementById('probability-options');
+    optionsContainer.innerHTML = '';
+    
+    currentProbabilityProblem.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.innerHTML = `
+            <input type="radio" name="probability" id="option-${index}" value="${option.value}">
+            <label for="option-${index}">${option.text}</label>
+        `;
+        optionElement.querySelector('input').addEventListener('change', function() {
+            userProbabilityAnswer = this.value;
+        });
+        optionsContainer.appendChild(optionElement);
+    });
+    
+    // پاک کردن نتیجه و راه حل قبلی
+    document.getElementById('probability-result').textContent = '';
+    document.getElementById('probability-explanation').textContent = '';
 }
 
-// به روز رسانی نمودار
-function updateChart() {
-    const chartContainer = document.getElementById('chart');
-    chartContainer.innerHTML = '';
-    
-    const maxValue = Math.max(...results);
-    const chartHeight = 200;
-    const barWidth = 30;
-    const gap = (chartContainer.offsetWidth - (11 * barWidth)) / 12;
-    
-    for (let i = 0; i < 11; i++) {
-        const value = results[i];
-        const height = value > 0 ? (value / maxValue) * chartHeight * 0.9 : 5;
-        
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.left = `${gap + i * (barWidth + gap)}px`;
-        bar.style.height = `${height}px`;
-        bar.style.width = `${barWidth}px`;
-        
-        const label = document.createElement('div');
-        label.className = 'bar-label';
-        label.textContent = i+2;
-        
-        const barValue = document.createElement('div');
-        barValue.className = 'bar-value';
-        barValue.textContent = value;
-        
-        bar.appendChild(label);
-        bar.appendChild(barValue);
-        chartContainer.appendChild(bar);
+// بررسی پاسخ احتمال
+function checkProbabilityAnswer() {
+    if (!userProbabilityAnswer) {
+        alert('لطفاً یک گزینه را انتخاب کنید');
+        return;
     }
+    
+    const resultElement = document.getElementById('probability-result');
+    const correctAnswer = currentProbabilityProblem.options.find(opt => opt.correct).value;
+    
+    if (userProbabilityAnswer === correctAnswer) {
+        resultElement.innerHTML = '<span style="color: var(--success)">پاسخ شما صحیح است! ✓</span>';
+    } else {
+        resultElement.innerHTML = '<span style="color: var(--danger)">پاسخ شما نادرست است!</span>';
+    }
+    
+    // نمایش راه حل
+    document.getElementById('probability-explanation').innerHTML = currentProbabilityProblem.explanation;
+}
+
+// مسئله بعدی احتمال
+function nextProbabilityProblem() {
+    userProbabilityAnswer = null;
+    generateProbabilityProblem();
 }
 
 // بازی محاسبات سریع
@@ -193,7 +238,14 @@ function checkAnswer() {
     const userAnswer = parseFloat(document.getElementById('answer').value);
     const feedback = document.getElementById('feedback');
     
-    if (userAnswer === currentQuestion.answer) {
+    if (isNaN(userAnswer)) {
+        feedback.textContent = 'لطفاً یک عدد وارد کنید';
+        feedback.className = 'feedback incorrect';
+        return;
+    }
+    
+    // مقایسه با دقت 0.001 برای اعداد اعشاری
+    if (Math.abs(userAnswer - currentQuestion.answer) < 0.001) {
         score++;
         document.getElementById('score').textContent = score;
         feedback.textContent = 'درست! ✓';
