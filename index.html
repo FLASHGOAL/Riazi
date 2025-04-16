@@ -98,30 +98,25 @@
             </div>
         </section>
         
-          <section id="probability" class="probability-section">
-        <h2><i class="fas fa-chart-bar"></i> آمار و احتمال</h2>
-        
-        <div class="probability-game">
-            <div class="game-stats">
-                <div>امتیاز: <span id="probability-score">0</span></div>
-                <div>سوال: <span id="question-count">1</span>/<span id="total-questions">10</span></div>
-            </div>
+        <section id="probability" class="probability-section">
+            <h2><i class="fas fa-chart-bar"></i> آمار و احتمال</h2>
             
-            <div class="problem-box">
-                <h3><i class="fas fa-question-circle"></i> مسئله احتمال</h3>
-                <div class="problem-text" id="probability-problem"></div>
-                <div class="options" id="probability-options"></div>
-                <div class="result" id="probability-result"></div>
+            <div class="probability-game">
+                <div class="problem-box">
+                    <h3><i class="fas fa-question-circle"></i> مسئله احتمال</h3>
+                    <div class="problem-text" id="probability-problem"></div>
+                    <div class="options" id="probability-options"></div>
+                    <button onclick="checkProbabilityAnswer()">بررسی پاسخ</button>
+                    <div class="result" id="probability-result"></div>
+                </div>
+                
+                <div class="explanation-box">
+                    <h3><i class="fas fa-lightbulb"></i> راه حل</h3>
+                    <div class="explanation-text" id="probability-explanation"></div>
+                    <button onclick="nextProbabilityProblem()">مسئله بعدی</button>
+                </div>
             </div>
-            
-            <div class="explanation-box">
-                <h3><i class="fas fa-lightbulb"></i> راه حل</h3>
-                <div class="explanation-text" id="probability-explanation"></div>
-            </div>
-            
-            <button class="start-btn" onclick="startProbabilityGame()">شروع بازی</button>
-        </div>
-    </section>
+        </section>
         
         <section id="math-game" class="math-game-section">
             <h2><i class="fas fa-stopwatch"></i> بازی محاسبات سریع</h2>
@@ -137,7 +132,7 @@
                 
                 <div class="game-area">
                     <div class="question" id="question"></div>
-                    <input type="number" id="answer" placeholder="پاسخ شما...">
+                    <input type="number" id="answer" placeholder="پاسخ شما..." dir="ltr">
                     <button onclick="checkAnswer()">بررسی پاسخ</button>
                     <div class="feedback" id="feedback"></div>
                 </div>
