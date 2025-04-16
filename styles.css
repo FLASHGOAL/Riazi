@@ -337,46 +337,26 @@ button:hover {
 
 .probability-game {
     width: 100%;
+    text-align: center;
 }
 
-.problem-text {
-    font-size: 1.1rem;
-    margin: 1rem 0;
-    line-height: 1.8;
+.probability-game .game-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.options {
-    margin: 1.5rem 0;
+.probability-game .game-stats div {
+    color: var(--primary);
 }
 
-.option {
-    display: block;
-    margin: 0.8rem 0;
-    padding: 0.8rem;
-    background-color: #f5f7fa;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.option:hover {
-    background-color: #e4e8f0;
-}
-
-.option input[type="radio"] {
-    margin-left: 10px;
-}
-
-.explanation-text {
-    margin: 1rem 0;
-    line-height: 1.8;
-}
-
-.math-game-container {
-    flex-direction: column;
-}
-
-.game-info {
+.problem-box {
     background: white;
     border-radius: 10px;
     padding: 1.5rem;
@@ -384,85 +364,93 @@ button:hover {
     margin-bottom: 1.5rem;
 }
 
-.game-stats {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-.game-stats div {
-    color: var(--primary);
-}
-
-.question {
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
+.problem-text {
+    font-size: 1.1rem;
     margin: 1rem 0;
-    color: var(--primary);
+    line-height: 1.8;
+    min-height: 80px;
 }
 
-.ltr-number {
-    direction: ltr;
-    display: inline-block;
-    unicode-bidi: embed;
+.options {
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
-.feedback {
-    margin-top: 1rem;
-    padding: 0.8rem;
+.option {
+    padding: 1rem;
+    background-color: #f5f7fa;
     border-radius: 6px;
-    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.option:hover {
+    background-color: #e4e8f0;
+}
+
+.option.selected {
+    border-color: var(--accent);
+    background-color: rgba(72, 149, 239, 0.1);
+}
+
+.option.correct {
+    border-color: var(--success);
+    background-color: rgba(76, 201, 240, 0.1);
+}
+
+.option.incorrect {
+    border-color: var(--danger);
+    background-color: rgba(247, 37, 133, 0.1);
+}
+
+.explanation-box {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    min-height: 150px;
+}
+
+.explanation-text {
+    margin: 1rem 0;
+    line-height: 1.8;
+}
+
+.probability-feedback {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
     font-weight: 500;
 }
 
-.correct {
+.probability-feedback.correct {
     background-color: rgba(76, 201, 240, 0.2);
     color: var(--success);
 }
 
-.incorrect {
+.probability-feedback.incorrect {
     background-color: rgba(247, 37, 133, 0.2);
     color: var(--danger);
 }
 
-.start-btn {
-    display: block;
-    margin: 2rem auto 0;
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-}
-
-footer {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+.next-btn {
+    display: none;
+    margin: 1rem auto 0;
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(to right, var(--primary), var(--accent));
     color: white;
-    text-align: center;
-    padding: 2rem;
-    margin-top: 3rem;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-    }
-    
-    .calculator, 
-    .probability-game,
-    .math-game-container {
-        flex-direction: column;
+    .options {
+        grid-template-columns: 1fr;
     }
 }
