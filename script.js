@@ -44,29 +44,34 @@ function updateTriangleVisualization(a, b, c) {
     const svg = document.querySelector('.triangle-svg');
     const path = document.querySelector('.triangle-path');
     
-    // محاسبه مختصات بر اساس نسبت اضلاع
+    // محاسبه مختصات با حفظ نسبت‌ها
     const maxSide = Math.max(a, b, c);
     const scale = 160 / maxSide;
     const scaledA = a * scale;
     const scaledB = b * scale;
+    const scaledC = c * scale;
+    
+    // مختصات شروع
+    const startX = 20, startY = 200;
     
     // ایجاد مسیر مثلث
-    const pathData = `M20,180 L20,${180 - scaledB} L${20 + scaledA},180 Z`;
+    const pathData = `M${startX},${startY} L${startX},${startY - scaledB} L${startX + scaledA},${startY} Z`;
     path.setAttribute('d', pathData);
     
     // به روز رسانی برچسب‌ها
-    const labels = document.querySelectorAll('.side-label');
-    labels[0].textContent = `a = ${a}`;
-    labels[0].setAttribute('x', 10);
-    labels[0].setAttribute('y', 190);
+    document.getElementById('side-a-label').textContent = `a = ${a}`;
+    document.getElementById('side-b-label').textContent = `b = ${b}`;
+    document.getElementById('side-c-label').textContent = `c = ${c.toFixed(2)}`;
     
-    labels[1].textContent = `b = ${b}`;
-    labels[1].setAttribute('x', 10);
-    labels[1].setAttribute('y', 180 - (scaledB / 2));
+    // تنظیم موقعیت برچسب‌ها
+    document.getElementById('side-a-label').setAttribute('x', startX + (scaledA / 2));
+    document.getElementById('side-a-label').setAttribute('y', startY + 20);
     
-    labels[2].textContent = `c = ${c.toFixed(2)}`;
-    labels[2].setAttribute('x', 20 + (scaledA / 2) - 20);
-    labels[2].setAttribute('y', 180 - (scaledB / 2) - 10);
+    document.getElementById('side-b-label').setAttribute('x', startX - 15);
+    document.getElementById('side-b-label').setAttribute('y', startY - (scaledB / 2));
+    
+    document.getElementById('side-c-label').setAttribute('x', startX + (scaledA / 2) - 15);
+    document.getElementById('side-c-label').setAttribute('y', startY - (scaledB / 2) - 10);
 }
 
 // بخش احتمال - متغیرهای جهانی
@@ -228,8 +233,14 @@ function generateQuestion() {
         answer: operation.method(num1, num2)
     };
     
-    document.getElementById('question').textContent = 
-        `${num1} ${operation.symbol} ${num2} = ?`;
+    // نمایش اعداد از چپ به راست برای ضرب
+    if (operation.symbol === '×') {
+        document.getElementById('question').innerHTML = 
+            `<span class="ltr-number">${num1}</span> ${operation.symbol} <span class="ltr-number">${num2}</span> = ?`;
+    } else {
+        document.getElementById('question').textContent = 
+            `${num1} ${operation.symbol} ${num2} = ?`;
+    }
 }
 
 function checkAnswer() {
@@ -244,8 +255,10 @@ function checkAnswer() {
         return;
     }
     
-    // مقایسه با دقت 0.001 برای اعداد اعشاری
-    if (Math.abs(userAnswer - currentQuestion.answer) < 0.001) {
+    // برای ضرب، دقت بیشتری در تشخیص پاسخ لازم است
+    const tolerance = currentQuestion.operation === '×' ? 0.0001 : 0.001;
+    
+    if (Math.abs(userAnswer - currentQuestion.answer) < tolerance) {
         score++;
         document.getElementById('score').textContent = score;
         feedback.textContent = 'درست! ✓';
